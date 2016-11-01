@@ -28,7 +28,7 @@ var appRoot = require('app-root-path');
 var PHONE_IMAGE_EDGE_OFFSET = 20;
 
 
-function renderWrappedText(context, text, x, y, maxWidth, lineHeight) {
+function renderWrappedText(context, text, x, y, maxWidth, lineHeight, shadow) {
 	var totalHeight = 0;
 	var words = text.split(/\s/g);
 	var spaces = text.match(/\s/g) || [];
@@ -45,7 +45,14 @@ function renderWrappedText(context, text, x, y, maxWidth, lineHeight) {
 				break;
 			}
 		}
-		context.shadowBlur = 0;
+		if (shadow) {
+			context.shadowBlur = shadow.blur;
+			context.shadowColor = shadow.color;
+			context.shadowOffsetX = shadow.offsetX;
+			context.shadowOffsetY = shadow.offsetY;
+		} else {
+			context.shadowBlur = 0;
+		}
 		var myX = x + ((maxWidth - width) / 2.0);
 		context.fillText(line, myX, y);
 
@@ -95,6 +102,13 @@ var ScreenshotCanvasWrapper = createClass({
 		this.setPhoneColor(options.phoneColor || 'black');
 		this.setFontSize(16);
 		this.setOrientation(options.isLandscape || null);
+
+		this.shadow = {
+			color: 'rgba(0,0,0,0.25)',
+			blur: 5,
+			offsetX: 0,
+			offsetY: 0
+		};
 
 		if (options.label) {
 			this.setLabel(options.label)
@@ -159,6 +173,23 @@ var ScreenshotCanvasWrapper = createClass({
 	},
 	setFontColor: function(fontColor) {
 		this.fontColor = fontColor;
+		this.rerender();
+	},
+
+	setShadow: function(color, blur, offsetX, offsetY) {
+		if (color === false) {
+			this.shadow = false;
+		} else {
+			blur = blur || 20;
+			offsetX = offsetX || 0;
+			offsetY = offsetY || 0;
+			this.shadow = {
+				color: color,
+				blur: blur,
+				offsetX: offsetX,
+				offsetY: offsetY
+			};
+		}
 		this.rerender();
 	},
 
@@ -324,7 +355,7 @@ var ScreenshotCanvasWrapper = createClass({
 				// First render, about to be discarded, these don't matter.
 				0, 0,
 				// .. but these do.
-				textMaxWidth, lineHeight);
+				textMaxWidth, lineHeight, this.shadow);
 		}
 
 		// RESET THE BACKGROUND.
@@ -357,7 +388,7 @@ var ScreenshotCanvasWrapper = createClass({
 			if (!this.labelHidden) {
 				renderWrappedText(context, this.label || '',
 					textX, textPadding,
-					textMaxWidth, lineHeight);
+					textMaxWidth, lineHeight, this.shadow);
 			}
 
 		} else if (this.labelPosition == LABEL_POSITION_ABOVE_FULL_DEVICE) {
@@ -366,7 +397,7 @@ var ScreenshotCanvasWrapper = createClass({
 			if (!this.labelHidden) {
 				renderWrappedText(context, this.label || '',
 					textX, textPadding,
-					textMaxWidth, lineHeight);
+					textMaxWidth, lineHeight, this.shadow);
 			}
 
 		} else if (this.labelPosition == LABEL_POSITION_BELOW) {
@@ -377,7 +408,7 @@ var ScreenshotCanvasWrapper = createClass({
 				var textTop = height - textHeight;
 				renderWrappedText(context, this.label || '',
 					textX, textTop,
-					textMaxWidth, lineHeight);
+					textMaxWidth, lineHeight, this.shadow);
 			}
 
 		} else if (this.labelPosition == LABEL_POSITION_BELOW_FULL_DEVICE) {
@@ -388,7 +419,7 @@ var ScreenshotCanvasWrapper = createClass({
 				var textTop = height - textHeight;
 				renderWrappedText(context, this.label || '',
 					textX, textTop,
-					textMaxWidth, lineHeight);
+					textMaxWidth, lineHeight, this.shadow);
 			}
 
 		} else if (this.labelPosition == LABEL_POSITION_DEVICE) {
@@ -400,7 +431,7 @@ var ScreenshotCanvasWrapper = createClass({
 			if (!this.labelHidden) {
 				this.shotAndText = renderWrappedText(context, this.label || '',
 					textX, textPadding,
-					textMaxWidth, lineHeight);
+					textMaxWidth, lineHeight, this.shadow);
 			}
 
 		} else if (this.labelPosition == LABEL_POSITION_BELOW_SCREENSHOT) {
@@ -411,7 +442,7 @@ var ScreenshotCanvasWrapper = createClass({
 				var textTop = height - textHeight;
 				this.shotAndText = renderWrappedText(context, this.label || '',
 					textX, textTop,
-					textMaxWidth, lineHeight);
+					textMaxWidth, lineHeight, this.shadow);
 			}
 
 		} else if (this.labelPosition == LABEL_POSITION_NONE) {

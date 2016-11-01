@@ -2,9 +2,7 @@
   "name": "screenshot-automator",
   "version": "1.0.0",
   "description": "An automatic screenshot framer for iOS and Android devices, based on LaunchKit.",
-  "main": "generate.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node generate.js"
   },
   "repository": {
@@ -17,7 +15,6 @@
     "url": "https://github.com/lesteenman/screenshot-automator/issues"
   },
   "dependencies": {
-    "skit": "~0.3.6",
     "create-class": "~1.0.1",
     "foreach": "~2.0.5",
     "canvas": "~1.6.2",
