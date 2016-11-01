@@ -1,6 +1,5 @@
 Screenshot Automator
 ====================
-
 This is a script that automatically frames screenshots with text to accompany them.
 
 Install
@@ -37,3 +36,13 @@ A sample config can be found in `sample_screenshots.json`.
 Notice
 ======
 The script that actually performs the framing, along with the static phone assets, are (almost) directly sourced from the [LaunchKit](https://github.com/launchkit/LaunchKit) source.
+
+TODO
+====
+ - [ ] Properly document the screenshots.json structure
+ - [ ] Add font size/weight to each device, and multipliers per shot
+ - [ ] Properly support text shadow
+ - [ ] Option to darken background
+
+Future:
+ - [ ] Automatically add status bars etc.
