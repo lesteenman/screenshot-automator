@@ -55,11 +55,6 @@ if (!fs.existsSync('output')) fs.mkdirSync('output');
 
 var errors = 0;
 each(config.shots, function(shot, shotName) {
-	var shotFolder = 'output/'+shotName;
-	if (!fs.existsSync(shotFolder)) {
-		console.log('Making directory', shotFolder);
-		fs.mkdirSync(shotFolder);
-	}
 
 	each(exportDevices, function(device) {
 		var shotFramer = new Framer(device, {
@@ -70,16 +65,15 @@ each(config.shots, function(shot, shotName) {
 		});
 
 		if (shot.backgroundColor) shotFramer.setBackgroundColor(shot.backgroundColor);
-		if (shot.backgroundImage) shotFramer.setBackgroundImageWithUrl(shot.backgroundImage);
-		if (shot.fontSize) shotFramer.setFontSize(shot.fontSize);
-		if (config.fontName) shotFramer.setFontSize(config.fontName);
-		if (shot.fontColor) shotFramer.setFontColor(shot.fontColor);
+		else if (shot.backgroundImage) shotFramer.setBackgroundImageWithUrl(appRoot + '/' + shot.backgroundImage);
 
-		shotFramer.setFontColor('#333');
-		shotFramer.setFontSize(6);
-		shotFramer.setFontWeight('roboto', '200', function() {
-			// TODO: Customize screenshots folder?
-			var screenshotUrl = appRoot + '/screenshots/' + device.config.shotsname + '/' + shot.source;
+		shotFramer.setFontSize(shot.text.fontSize || device.config.fontSize || config.fontSize || 12);
+		shotFramer.setFontColor(shot.text.color || config.fontColor || '#000');
+		var fontName = shot.text.fontName || config.fontName || 'roboto';
+		var fontWeight = shot.text.fontWeight || device.config.fontWeight || config.fontWeight || 400;
+
+		shotFramer.setFontWeight(fontName, fontWeight, function() {
+			var screenshotUrl = appRoot + '/' + config.screenshots + '/' + device.config.shotsname + '/' + shot.source;
 			if (!fs.existsSync(screenshotUrl)) {
 				errors++;
 				return console.error('File not found', screenshotUrl);
@@ -88,8 +82,14 @@ each(config.shots, function(shot, shotName) {
 
 			dataUrl = shotFramer.renderToDataURL(function(err, dataUrl) {
 				if (err) return console.error(err);
-				save(dataUrl, appRoot + '/' + shotFolder + '/' + device.filenamePrefix + '.jpg');
-				console.log('Saved', shotFolder + '/' + device.filenamePrefix + '.jpg');
+
+				var shotFolder = 'output/'+device.filenamePrefix;
+				if (!fs.existsSync(shotFolder)) {
+					fs.mkdirSync(shotFolder);
+				}
+				var outputUrl = appRoot + '/' + shotFolder + '/' + shotName + '.jpg';
+				save(dataUrl, outputUrl);
+				console.log('Saved', outputUrl);
 			});
 		}, this);
 	});
