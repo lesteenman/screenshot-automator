@@ -1,0 +1,38 @@
+{
+	"screenshots": "./screenshots",
+	"fontName": "roboto",
+	"devices": [
+		{
+			"lkname": "nexus5x",
+			"shotsname": "android-phone",
+			"color": "black",
+			"orientation": "portrait"
+		},
+		{
+			"lkname": "ipadpro",
+			"shotsname": "ios-12-9-portrait",
+			"color": "white",
+			"orientation": "landscape"
+		}
+	],
+	"shots": {
+		"shot1": {
+			"source": "login.png",
+			"backgroundColor": "#ef6b00",
+			"text": {
+				"text": "The most intuitive login page you will ever see!",
+				"position": "above",
+				"color": "#2a2a2a"
+			}
+		},
+		"shot2": {
+			"source": "frontpage.png",
+			"backgroundImage": "./backgrounds/beach.png",
+			"text": {
+				"text": "We have a beautiful frontpage!",
+				"position": "below_full_device",
+				"color": "#2a2a2a"
+			}
+		}
+	}
+}
