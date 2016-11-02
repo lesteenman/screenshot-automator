@@ -80,6 +80,11 @@ each(config.shots, function(shot, shotName) {
 		shotFramer.setFontColor(shot.text.color || config.fontColor || '#000');
 		var fontName = config.fontName || 'roboto';
 
+		if (shot.text.shadow) {
+			var shadow = shot.text.shadow;
+			shotFramer.setShadow(shadow.color, shadow.blur, shadow.offsetX, shadow.offsetY);
+		}
+
 		shotFramer.setFontWeight(fontName, fontWeight, function() {
 			var screenshotUrl = appRoot + '/' + config.screenshots + '/' + device.config.shotsname + '/' + shot.source;
 			if (!fs.existsSync(screenshotUrl)) {
