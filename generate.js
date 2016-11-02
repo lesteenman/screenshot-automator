@@ -64,13 +64,21 @@ each(config.shots, function(shot, shotName) {
 			'phoneColor': device.config.color
 		});
 
-		if (shot.backgroundColor) shotFramer.setBackgroundColor(shot.backgroundColor);
-		else if (shot.backgroundImage) shotFramer.setBackgroundImageWithUrl(appRoot + '/' + shot.backgroundImage);
+		if (shot.background) {
+			var background = shot.background;
+			if (background.color) shotFramer.setBackgroundColor(background.color);
+			if (background.image) shotFramer.setBackgroundImageWithUrl(appRoot + '/' + background.image);
+		}
 
-		shotFramer.setFontSize(shot.text.fontSize || device.config.fontSize || config.fontSize || 12);
+		var fontSize = device.config.fontSize || 12;
+		if (shot.text.fontSizeMultiplier) fontSize *= shot.text.fontSizeMultiplier;
+		shotFramer.setFontSize(fontSize);
+
+		var fontWeight = config.fontWeight || 400;
+		if (shot.text.fontWeightMultiplier) fontWeight *= shot.text.fontWeightMultiplier;
+
 		shotFramer.setFontColor(shot.text.color || config.fontColor || '#000');
-		var fontName = shot.text.fontName || config.fontName || 'roboto';
-		var fontWeight = shot.text.fontWeight || device.config.fontWeight || config.fontWeight || 400;
+		var fontName = config.fontName || 'roboto';
 
 		shotFramer.setFontWeight(fontName, fontWeight, function() {
 			var screenshotUrl = appRoot + '/' + config.screenshots + '/' + device.config.shotsname + '/' + shot.source;
@@ -79,6 +87,11 @@ each(config.shots, function(shot, shotName) {
 				return console.error('File not found', screenshotUrl);
 			}
 			shotFramer.setScreenshotImageWithUrl(screenshotUrl);
+
+			if (shot.background && shot.background.cover) {
+				var cover = shot.background.cover;
+				shotFramer.setBackgroundCover(cover.color, cover.opacity);
+			}
 
 			dataUrl = shotFramer.renderToDataURL(function(err, dataUrl) {
 				if (err) return console.error(err);

@@ -110,6 +110,11 @@ var ScreenshotCanvasWrapper = createClass({
 			offsetY: 0
 		};
 
+		this.backgroundCover = {
+			opacity: 0,
+			color: '#000'
+		};
+
 		if (options.label) {
 			this.setLabel(options.label)
 		}
@@ -189,6 +194,19 @@ var ScreenshotCanvasWrapper = createClass({
 				offsetX: offsetX,
 				offsetY: offsetY
 			};
+		}
+		this.rerender();
+	},
+
+	setBackgroundCover: function(color, opacity) {
+		if (color === false) {
+			this.backgroundCover = false;
+		} else {
+			opacity = opacity === undefined ? 0.5 : opacity;
+			this.backgroundCover = {
+				color: color,
+				opacity: opacity
+			}
 		}
 		this.rerender();
 	},
@@ -372,6 +390,13 @@ var ScreenshotCanvasWrapper = createClass({
 				(width - aspectFit.width) / 2,
 				(height - aspectFit.height) / 2,
 				aspectFit.width, aspectFit.height);
+		}
+
+		if (this.backgroundCover) {
+			context.fillStyle = this.backgroundCover.color;
+			context.globalAlpha = this.backgroundCover.alpha;
+			context.fillRect(0, 0, width, height);
+			context.globalAlpha = 1;
 		}
 
 		// Then setup the text fill.
