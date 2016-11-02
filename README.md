@@ -70,8 +70,8 @@ The script that actually performs the framing, along with the static phone asset
 
 TODO
 ====
- - [ ] Properly document the screenshots.json structure
- - [ ] Add font size/weight to each device, and multipliers per shot
+ - [x] Properly document the screenshots.json structure
+ - [x] Add font size/weight to each device, and multipliers per shot
  - [ ] Properly support text shadow
  - [x] Option to darken background
 
