@@ -394,7 +394,7 @@ var ScreenshotCanvasWrapper = createClass({
 
 		if (this.backgroundCover) {
 			context.fillStyle = this.backgroundCover.color;
-			context.globalAlpha = this.backgroundCover.alpha;
+			context.globalAlpha = this.backgroundCover.opacity;
 			context.fillRect(0, 0, width, height);
 			context.globalAlpha = 1;
 		}
